@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Nastavenie znakovej sady na UTF-8 pre správne zobrazenie špeciálnych znakov -->
+    <meta charset="UTF-8">
+    <!-- Nastavenie viewportu pre responzívny dizajn na mobilných zariadeniach -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Názov stránky zobrazený v prehliadači -->
+    <title>Magic Mirror Clone</title>
+    <!-- Odkaz na externý CSS súbor so štýlmi -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Prepojenie na Google Fonts pre rýchlejšie načítanie -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Načítanie Google Fonts - Inter, Roboto Mono, JetBrains Mono, Orbitron, Share Tech Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Roboto+Mono:wght@300;400;500&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hlavný kontajner aplikácie -->
+    <div class="app-container">
+        <!-- Horná navigačná lišta - trigger pre zobrazenie pri hover -->
+        <div class="navbar-hover-trigger"></div>
+        <!-- Navigačná lišta s tlačidlom pre prepnutie do editačného režimu -->
+        <nav class="top-navbar">
+            <!-- Tlačidlo na prepnutie editačného režimu (zobrazuje/skryje možnosti úpravy modulov) -->
+            <button class="edit-mode-toggle" id="editModeToggle">Edit Mode</button>
+        </nav>
+
+        <!-- Hlavný grid kontajner pre moduly - 3x3 mriežka -->
+        <div class="modules-grid" id="modulesGrid">
+            <!-- Bunky gridu - každá bunka môže obsahovať jeden modul -->
+            <!-- Bunka v ľavom hornom rohu -->
+            <div class="grid-cell" data-position="top_left" id="cell_top_left"></div>
+            <!-- Bunka v strednom hornom rohu -->
+            <div class="grid-cell" data-position="top_center" id="cell_top_center"></div>
+            <!-- Bunka v pravom hornom rohu -->
+            <div class="grid-cell" data-position="top_right" id="cell_top_right"></div>
+            <!-- Bunka v ľavom strednom rohu -->
+            <div class="grid-cell" data-position="middle_left" id="cell_middle_left"></div>
+            <!-- Bunka v strednom strednom rohu -->
+            <div class="grid-cell" data-position="middle_center" id="cell_middle_center"></div>
+            <!-- Bunka v pravom strednom rohu -->
+            <div class="grid-cell" data-position="middle_right" id="cell_middle_right"></div>
+            <!-- Bunka v ľavom dolnom rohu -->
+            <div class="grid-cell" data-position="bottom_left" id="cell_bottom_left"></div>
+            <!-- Bunka v strednom dolnom rohu -->
+            <div class="grid-cell" data-position="bottom_center" id="cell_bottom_center"></div>
+            <!-- Bunka v pravom dolnom rohu -->
+            <div class="grid-cell" data-position="bottom_right" id="cell_bottom_right"></div>
+        </div>
+
+        <!-- Plávajúce tlačidlo na pridanie modulu (zobrazuje sa len v editačnom režime) -->
+        <button class="floating-add-button" id="floatingAddButton">
+            <!-- Ikona plus pre pridanie -->
+            <span class="add-icon">+</span>
+        </button>
+
+        <!-- Modálne okno s inventárom modulov (zoznam dostupných modulov na pridanie) -->
+        <div class="inventory-modal" id="inventoryModal">
+            <div class="inventory-content">
+                <!-- Hlavička modálneho okna -->
+                <div class="inventory-header">
+                    <!-- Nadpis modálneho okna -->
+                    <h2 class="inventory-title">Add Module</h2>
+                    <!-- Tlačidlo na zatvorenie modálneho okna -->
+                    <button class="inventory-close" id="inventoryClose">&times;</button>
+                </div>
+                <!-- Zoznam dostupných modulov (dynamicky sa naplní JavaScriptom) -->
+                <div class="inventory-list" id="inventoryList">
+                    <!-- Moduly budú dynamicky pridané sem -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Načítanie JavaScript súborov v správnom poradí -->
+    <!-- Hlavný kontrolér aplikácie -->
+    <script src="renderer.js"></script>
+    <!-- Modul pre zobrazenie hodín -->
+    <script src="modules/clock.module.js"></script>
+    <!-- Modul pre zobrazenie kalendára -->
+    <script src="modules/calendar.module.js"></script>
+    <!-- Modul pre zobrazenie RSS noviniek -->
+    <script src="modules/rss.module.js"></script>
+    <!-- Modul pre zobrazenie počasia -->
+    <script src="modules/weather.module.js"></script>
+</body>
+</html>

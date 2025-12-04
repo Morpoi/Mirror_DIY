@@ -1,0 +1,1489 @@
+/* Reset základných štýlov pre všetky elementy */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Hlavný kontajner aplikácie (full screen, tmavé pozadie) */
+.app-container {
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Neviditeľná zóna hore – pri hoveri zobrazí navigačnú lištu */
+.navbar-hover-trigger {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 999;
+    pointer-events: all;
+}
+
+/* Horná navigačná lišta – skrytá mimo obrazovky, vysúva sa pri hoveri */
+.top-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+    pointer-events: none;
+}
+
+/* Zobrazenie navigácie pri hoveri na trigger alebo bar */
+.navbar-hover-trigger:hover ~ .top-navbar,
+.top-navbar:hover {
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+.top-navbar:hover {
+    pointer-events: all;
+}
+
+/* Tlačidlo Edit Mode – štýl, animácia pri hoveri/aktivácii */
+.edit-mode-toggle {
+    background-color: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Svetelný prechod cez tlačidlo pri hoveri */
+.edit-mode-toggle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.edit-mode-toggle:hover::before {
+    left: 100%;
+}
+
+/* Hover efekt pre tlačidlo Edit Mode */
+.edit-mode-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.95);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Vzhľad tlačidla keď je Edit Mode aktívny */
+.edit-mode-toggle.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.edit-mode-toggle.active:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Hlavná 3x3 mriežka pre moduly */
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Jedna bunka mriežky – pozadie a základný vzhľad */
+.grid-cell {
+    position: relative;
+    background-color: #000000;
+    border: 2px dashed transparent;
+    border-radius: 8px;
+    min-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* V editačnom režime zobraz rámček okolo buniek */
+.edit-mode .grid-cell {
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Zvýraznenie bunky pri ťahaní modulu nad ňu */
+.edit-mode .grid-cell.drag-over {
+    border-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+/* Wrapper jedného modulu – vnútorný layout a animácia */
+.module-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: #000000;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* V editačnom režime je modul ťahateľný (drag) */
+.edit-mode .module-wrapper {
+    cursor: move;
+}
+
+/* Hlavička modulu (titulok, tlačidlá) – skrytá mimo edit módu */
+.module-header {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* Kontajner pre ovládacie prvky v hlavičke */
+.module-header-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Zobrazenie hlavičky iba v editačnom režime */
+.edit-mode .module-header {
+    display: flex;
+}
+
+/* Názov modulu v hlavičke */
+.module-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Prepínač veľkosti modulu (small/medium/large) */
+.module-size-toggle {
+    display: flex;
+    gap: 0;
+    align-items: center;
+    background-color: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Jedno tlačidlo veľkosti */
+.size-btn {
+    background-color: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    min-width: 36px;
+    height: 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.08em;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.size-btn:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Aktívne tlačidlo veľkosti (aktuálne zvolený stav) */
+.size-btn.active {
+    color: #000000;
+    font-weight: 700;
+}
+
+/* Svetelné pozadie pod aktívnym tlačidlom */
+.size-btn.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    z-index: -1;
+    animation: sizeBtnActive 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animácia pri prepnutí veľkosti */
+@keyframes sizeBtnActive {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Tlačidlo na odstránenie modulu (X) – len v edit móde */
+.module-delete {
+    position: relative;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.4);
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    line-height: 1;
+    font-weight: 300;
+    flex-shrink: 0;
+}
+
+/* Zobrazenie delete tlačidla v editačnom režime */
+.edit-mode .module-delete {
+    display: flex;
+}
+
+/* Hover efekt na delete tlačidlo */
+.module-delete:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.7);
+    transform: scale(1.05);
+}
+
+/* Obsah modulu – vnútorný layout */
+.module-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Plávajúce + tlačidlo na pridanie modulu – pravý dolný roh */
+.floating-add-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    font-size: 32px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Zobrazenie + tlačidla len v editačnom režime */
+.edit-mode .floating-add-button {
+    display: flex;
+}
+
+/* Hover efekt – zväčšenie a otočenie pluska */
+.floating-add-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 6px 30px rgba(255, 255, 255, 0.2);
+}
+
+/* Zarovnanie ikony plus vo vnútri */
+.add-icon {
+    line-height: 1;
+}
+
+/* Modálne okno inventára modulov – prekrytie celej obrazovky */
+.inventory-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+/* Aktívne modálne okno – viditeľné a klikateľné */
+.inventory-modal.active {
+    display: flex;
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Obsah inventára – karta v strede obrazovky */
+.inventory-content {
+    background-color: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 85vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.9) translateY(20px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+/* Animované zobrazenie obsahu pri otvorení modálu */
+.inventory-modal.active .inventory-content {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+/* Hlavička inventára – názov + close tlačidlo */
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 28px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Nadpis inventára */
+.inventory-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Tlačidlo na zatvorenie modálneho okna */
+.inventory-close {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 20px;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    line-height: 1;
+}
+
+/* Hover efekt na zatváracie tlačidlo (otáčanie X) */
+.inventory-close:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    transform: rotate(90deg);
+}
+
+/* Zoznam modulov – grid layout, skrytý scroll bar */
+.inventory-list {
+    padding: 24px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.inventory-list::-webkit-scrollbar {
+    display: none;
+}
+
+/* Jedna položka v inventári – karta modulu */
+.inventory-item {
+    background-color: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 24px 20px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+}
+
+/* Animované postupné zobrazovanie položiek inventára */
+.inventory-modal.active .inventory-item {
+    animation: inventoryItemFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Postupné oneskorenie animácie pre prvé položky */
+.inventory-item:nth-child(1) { animation-delay: 0.05s; }
+.inventory-item:nth-child(2) { animation-delay: 0.1s; }
+.inventory-item:nth-child(3) { animation-delay: 0.15s; }
+.inventory-item:nth-child(4) { animation-delay: 0.2s; }
+
+/* Keyframes pre fade-in položiek inventára */
+@keyframes inventoryItemFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Jemný svetelný overlay na karte pri hoveri */
+.inventory-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Hover efekt na položku inventára */
+.inventory-item:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.inventory-item:hover::before {
+    opacity: 1;
+}
+
+/* Kliknutá položka – mierne stlmený pohyb */
+.inventory-item:active {
+    transform: translateY(-2px) scale(1);
+}
+
+/* Názov modulu v inventári */
+.inventory-item-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.02em;
+    position: relative;
+    z-index: 1;
+}
+
+/* Štýly pre hodiny – všetky veľkosti používajú center layout */
+.clock-module.small .module-content,
+.clock-module.medium .module-content,
+.clock-module.large .module-content {
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+/* Digitálne hodiny – small verzia (veľké čísla) */
+.clock-module.small .clock-display {
+    font-size: 64px;
+    font-weight: 400;
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* Digitálne hodiny – medium verzia */
+.clock-module.medium .clock-display {
+    font-size: 56px;
+    font-weight: 400;
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* Dátum pod hodinami – medium verzia */
+.clock-module.medium .clock-date {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 8px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Oddeľovače a dvojbodky pri hodinách */
+.clock-module.medium .clock-separator {
+    color: rgba(255, 255, 255, 0.3);
+    margin: 0 4px;
+    font-weight: 400;
+}
+
+/* Blikajúca dvojbodka medzi hodinami a minútami */
+.clock-module.medium .clock-colon {
+    animation: blink 1s infinite;
+}
+
+/* Blikajúca animácia */
+@keyframes blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0.3;
+    }
+}
+
+/* Veľká verzia hodinového modulu – zarovnanie na stred */
+.clock-module.large {
+    align-items: center;
+    justify-content: center;
+}
+
+/* Analógové hodiny – kruh */
+.analog-clock {
+    width: 200px;
+    height: 200px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    position: relative;
+    margin: 0 auto;
+}
+
+/* Základný štýl pre ručičky */
+.clock-hand {
+    position: absolute;
+    background-color: #ffffff;
+    transform-origin: bottom center;
+    border-radius: 2px;
+    transition: transform 0.1s linear;
+}
+
+/* Hodinová ručička */
+.hour-hand {
+    width: 4px;
+    height: 60px;
+    top: 40px;
+    left: 50%;
+    margin-left: -2px;
+}
+
+/* Minútová ručička */
+.minute-hand {
+    width: 3px;
+    height: 80px;
+    top: 20px;
+    left: 50%;
+    margin-left: -1.5px;
+}
+
+/* Sekundová ručička */
+.second-hand {
+    width: 1px;
+    height: 90px;
+    top: 10px;
+    left: 50%;
+    margin-left: -0.5px;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Stredový bod hodinového ciferníka */
+.clock-center {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+/* Všeobecné rozloženie kalendár modulu – všetky veľkosti */
+.calendar-module.small .module-content,
+.calendar-module.medium .module-content,
+.calendar-module.large .module-content {
+    height: 100%;
+}
+
+/* Malý kalendár – veľké číslo dňa + texty */
+.calendar-small {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 8px;
+}
+
+/* Veľké číslo dňa (small kalendár) */
+.calendar-day-number {
+    font-size: 56px;
+    font-weight: 300;
+    font-family: 'Roboto Mono', monospace;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+/* Názov dňa */
+.calendar-day-name {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+}
+
+/* Názov mesiaca */
+.calendar-month {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 400;
+}
+
+/* Text sviatku / poznámka pod dátumom */
+.calendar-holiday {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    margin-top: 4px;
+    padding: 4px 8px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Stredný kalendár – prehľad + ďalšie dni */
+.calendar-medium {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 20px;
+}
+
+/* Aktuálny deň v medium verzii */
+.calendar-current {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Grid budúcich dní (7 dní v riadku) */
+.calendar-next-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    flex: 1;
+}
+
+/* Jedna dlaždica budúceho dňa */
+.calendar-next-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 4px;
+}
+
+/* Zvýraznenie dňa keď je sviatok */
+.calendar-next-day.holiday {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Číslo dňa v budúcich dňoch */
+.next-day-number {
+    font-size: 18px;
+    font-weight: 400;
+    font-family: 'Roboto Mono', monospace;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Úprava farby a váhy čísla, ak je sviatok */
+.calendar-next-day.holiday .next-day-number {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+/* Skrátený názov dňa */
+.next-day-name {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Veľký kalendár – zoznam udalostí */
+.calendar-large {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 15px;
+    overflow: hidden;
+}
+
+/* Hlavička sekcie udalostí */
+.calendar-events-header {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 5px;
+}
+
+/* Scrollovateľný zoznam udalostí */
+.calendar-events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 5px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.calendar-events-list::-webkit-scrollbar {
+    display: none;
+}
+
+/* Text pri absencii udalostí */
+.calendar-no-events {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Jedna položka udalosti v zozname */
+.calendar-event-item {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+/* Hover zvýraznenie udalosti */
+.calendar-event-item:hover {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Zvýraznenie udalosti, ktorá je dnes */
+.calendar-event-item.today {
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Stĺpec s dátumom udalosti */
+.event-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+/* Číslo dňa v udalosti */
+.event-day-number {
+    font-size: 20px;
+    font-weight: 400;
+    font-family: 'Roboto Mono', monospace;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1;
+}
+
+/* Skrátený názov mesiaca v udalosti */
+.event-month {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+/* Obsah udalosti (názov + meta informácie) */
+.event-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+/* Názov udalosti */
+.event-name {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Zvýraznenie názvu keď ide o dnešnú udalosť */
+.calendar-event-item.today .event-name {
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 500;
+}
+
+/* Meta radok pod názvom (deň, zvyšok textu) */
+.event-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* Názov dňa v meta informáciách */
+.event-day-name {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Oddeľovač v meta informáciách */
+.event-separator {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* Počet dní / doplnková informácia */
+.event-days {
+    font-weight: 400;
+}
+
+/* --- RSS modul – štýly --- */
+
+/* Jedna headline položka v small verzii */
+.rss-headline-item {
+    padding: 10px;
+    background-color: #000000;
+    border-radius: 4px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.4;
+    animation: fadeInSlide 0.5s ease;
+}
+
+/* Small RSS – headlines zarovnané dole v module */
+.rss-module.small .rss-headlines {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 10px;
+    height: 100%;
+    overflow: hidden;
+    padding-bottom: 3px;
+}
+
+/* Animácia nábehu textu RSS */
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Medium RSS – zobrazenie každej správy v karte */
+.rss-module.medium .rss-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #000000;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+/* Názov RSS správy */
+.rss-item-title {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+/* Popis správy */
+.rss-item-description {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+}
+
+/* Dátum publikovania správy */
+.rss-pub-date {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 5px;
+    margin-bottom: 8px;
+    font-weight: 400;
+}
+
+/* Upravená veľkosť dátumu pre small verziu */
+.rss-module.small .rss-pub-date {
+    font-size: 12px;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+/* Marginy dátumu v medium verzii */
+.rss-module.medium .rss-pub-date {
+    margin-top: 4px;
+    margin-bottom: 10px;
+}
+
+/* Marginy dátumu vo veľkej RSS verzii */
+.rss-module.large .rss-pub-date {
+    margin-top: 4px;
+    margin-bottom: 8px;
+}
+
+/* Väčší text popisu v medium verzii */
+.rss-module.medium .rss-item-description {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Veľká RSS karta s náhľadovým obrázkom */
+.rss-module.large .rss-card {
+    background-color: #000000;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+/* Hover efekt veľkej RSS karty */
+.rss-card:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Thumbnail obrázok pri RSS správe */
+.rss-card-thumbnail {
+    width: 120px;
+    height: 120px;
+    min-width: 120px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+/* Vnútorný obsah veľkej RSS karty */
+.rss-module.large .rss-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Odstránenie dolného marginu titulku v large verzii */
+.rss-module.large .rss-item-title {
+    margin-bottom: 0;
+}
+
+/* Väčší text popisu aj v large verzii */
+.rss-module.large .rss-item-description {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Kontajner progress baru pre RSS rotáciu */
+.rss-progress-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+/* Samotný progress bar – šírka menená JS */
+.rss-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: rgba(255, 255, 255, 0.6);
+    transition: width 0.1s linear;
+}
+
+/* Umiestnenie progress baru v medium/large verzii – pod obsahom */
+.rss-module.medium .rss-progress-container,
+.rss-module.large .rss-progress-container {
+    position: relative;
+    margin-top: 15px;
+}
+
+/* Umiestnenie progress baru v small verzii – dolný okraj modulu */
+.rss-module.small .rss-progress-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+}
+
+/* --- Weather modul – štýly --- */
+
+/* Small verzia – obsah zarovnaný na stred */
+.weather-module.small .module-content {
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+/* Aktuálne počasie v small verzii */
+.weather-module.small .current-weather {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Základné zarovnanie pre current-weather */
+.current-weather {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Hlavná teplota */
+.weather-temp {
+    font-size: 36px;
+    font-weight: 300;
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* Ikona počasia (emoji / font) */
+.weather-icon {
+    font-size: 48px;
+}
+
+/* Pocitová teplota */
+.weather-feels-like {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 4px;
+}
+
+/* Min / max teplota */
+.weather-min-max {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 4px;
+}
+
+/* Header medium verzie počasia (ikona + text) */
+.weather-module.medium .weather-medium-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Ikona počasia pre medium header */
+.weather-medium-icon {
+    font-size: 48px;
+}
+
+/* Stĺpček s hlavnými info (teplota, rozsah) */
+.weather-medium-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Medium hlavná teplota */
+.weather-medium-temp {
+    font-size: 36px;
+    font-weight: 300;
+    font-family: 'Roboto Mono', monospace;
+    line-height: 1;
+}
+
+/* Medium rozsah teplôt */
+.weather-medium-range {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Grid štatistík počasia (vietor, vlhkosť, atď.) */
+.weather-medium-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-left: auto;
+    min-width: 120px;
+}
+
+/* Jedna položka štatistiky */
+.weather-stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Label štatistiky */
+.weather-stat-label {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Hodnota štatistiky */
+.weather-stat-value {
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Roboto Mono', monospace;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Grid kariet s doplnkovými informáciami */
+.weather-medium-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* Jedna info karta (napr. tlak, UV) */
+.weather-info-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background-color: #000000;
+    transition: all 0.2s ease;
+}
+
+/* Ikona v info karte */
+.weather-info-icon {
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 300;
+    width: 20px;
+    text-align: center;
+}
+
+/* Obsah info karty (label + hodnota) */
+.weather-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Label info */
+.weather-info-label {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+/* Hodnota info */
+.weather-info-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Roboto Mono', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Nadpis sekcie predpovede */
+.forecast-title {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+/* Jeden riadok predpovede (small/medium) */
+.forecast-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+/* Veľká verzia current weather – viac info vedľa seba */
+.weather-module.large .current-weather-large {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Stĺpček hlavných informácií vo veľkej verzii */
+.weather-main-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Väčšia hlavná teplota vo veľkej verzii */
+.weather-module.large .weather-temp {
+    font-size: 42px;
+}
+
+/* Pocitová teplota – veľká verzia */
+.weather-module.large .weather-feels-like {
+    font-size: 14px;
+}
+
+/* Min/max – veľká verzia */
+.weather-module.large .weather-min-max {
+    font-size: 16px;
+}
+
+/* Sekcia detailov počasia (tlak, vietor, atď.) */
+.weather-module.large .weather-details {
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+/* Jeden riadok detailu */
+.weather-detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 14px;
+}
+
+/* Popis detailu */
+.weather-detail-label {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Hodnota detailu */
+.weather-detail-value {
+    font-weight: 500;
+}
+
+/* Blok dennej predpovede (nad gridom) */
+.forecast-daily {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Grid dennej predpovede – 8 dní vedľa seba */
+.forecast-daily-large {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    width: 100%;
+}
+
+/* Karta jedného dňa v dennej predpovedi */
+.forecast-day-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 8px;
+    background-color: #000000;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+/* Hover efekt karty dňa – jemné zvýraznenie */
+.forecast-day-card:hover {
+    background-color: #000000;
+}
+
+/* Skrátený názov dňa */
+.forecast-day-name {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Ikona pre daný deň */
+.forecast-day-icon {
+    font-size: 28px;
+    margin: 4px 0;
+}
+
+/* Stĺpček s teplotami dňa */
+.forecast-day-temps {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+}
+
+/* Max teplota dňa */
+.forecast-temp-max {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* Priemerná teplota dňa */
+.forecast-temp-avg {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* Min teplota dňa */
+.forecast-temp-min {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* Zrážky dňa (text, napr. mm / %) */
+.forecast-day-precip {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 4px;
+}
+
+/* Rezerva výšky pri chýbajúcej hodnote zrážok */
+.forecast-day-precip-empty {
+    height: 14px;
+}
+
+/* Jeden riadok dennej predpovede (alternatívny layout) */
+.forecast-day-item {
+    display: grid;
+    grid-template-columns: 50px 40px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 14px;
+}
+
+/* Časť s teplotami v riadku */
+.forecast-day-temp {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    font-weight: 500;
+}
+
+/* --- Animácie modulov (pridanie/odstránenie) --- */
+
+/* Fade-in animácia pre novo pridaný modul */
+.module-wrapper.fade-in {
+    animation: moduleFadeIn 0.5s ease;
+}
+
+@keyframes moduleFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Fade-out animácia pri odstraňovaní modulu */
+.module-wrapper.fade-out {
+    animation: moduleFadeOut 0.3s ease forwards;
+}
+
+@keyframes moduleFadeOut {
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+/* --- Responzívny dizajn – mobilné zariadenia --- */
+@media (max-width: 768px) {
+    /* Na mobile sa mriežka zmení na 1 stĺpec */
+    .modules-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 15px;
+    }
+    
+    /* Minimálna výška bunky na mobile */
+    .grid-cell {
+        min-height: 200px;
+    }
+}
