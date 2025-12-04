@@ -7,6 +7,8 @@ class AppController {
         this.modules = new Map();
         // ID modulu ktorý je momentálne ťahaný (drag and drop)
         this.draggedModule = null;
+        // Timeout pre skrytie kurzora pri neaktivite
+        this.cursorTimeout = null;
         // Zoznam dostupných modulov ktoré možno pridať do aplikácie
         this.availableModules = [
             // Modul hodín - zobrazuje aktuálny čas
@@ -81,6 +83,8 @@ class AppController {
 
         // Nastavenie drag and drop funkcionality
         this.setupDragAndDrop();
+        // Nastavenie skrytia kurzora pri neaktivite
+        this.setupCursorHiding();
     }
 
     // Nastavenie drag and drop funkcionality pre presúvanie modulov
@@ -120,6 +124,28 @@ class AppController {
                 }
             });
         });
+    }
+
+    // Nastavenie skrytia kurzora pri neaktivite
+    setupCursorHiding() {
+        const resetCursor = () => {
+            document.body.classList.remove('hide-cursor');
+            clearTimeout(this.cursorTimeout);
+            this.cursorTimeout = setTimeout(() => {
+                document.body.classList.add('hide-cursor');
+            }, 5000);
+        };
+
+        // Počiatočné nastavenie timeoutu na skrytie kurzora
+        this.cursorTimeout = setTimeout(() => {
+            document.body.classList.add('hide-cursor');
+        }, 5000);
+
+        // Event listenery pre reset kurzora pri aktivite
+        document.addEventListener('mousemove', resetCursor);
+        document.addEventListener('mousedown', resetCursor);
+        document.addEventListener('mouseup', resetCursor);
+        document.addEventListener('wheel', resetCursor);
     }
 
     // Prepnutie editačného režimu (zapnutie/vypnutie)

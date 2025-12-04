@@ -1473,6 +1473,11 @@
     }
 }
 
+/* Hide cursor class for inactivity */
+.hide-cursor {
+    cursor: none !important;
+}
+
 /* --- Responzívny dizajn – mobilné zariadenia --- */
 @media (max-width: 768px) {
     /* Na mobile sa mriežka zmení na 1 stĺpec */
@@ -1481,7 +1486,7 @@
         grid-template-rows: auto;
         gap: 15px;
     }
-    
+
     /* Minimálna výška bunky na mobile */
     .grid-cell {
         min-height: 200px;

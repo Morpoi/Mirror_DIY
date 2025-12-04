@@ -20,7 +20,7 @@
 
 1. **Klonujte repozitár:**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Morpoi/Mirror_DIY.git
    cd Mirror_DIY
    ```
 
