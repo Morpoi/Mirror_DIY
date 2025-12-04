@@ -1,7 +1,5 @@
 # Mirror DIY
 
-Toto je klon aplikácie MagicMirror², vytvorený pomocou Electron frameworku. Aplikácia poskytuje modulárny informačný dashboard s rôznymi modulmi ako hodiny, kalendár, RSS novinky a počasie. Je navrhnutá pre použitie na dotykových obrazovkách alebo ako informačná obrazovka.
-
 ## Funkcie
 
 - **Modulárny dizajn**: Pridávajte, odstraňujte a presúvajte moduly podľa potreby
